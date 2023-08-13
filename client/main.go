@@ -42,7 +42,6 @@ func main() {
 	if status == 408 {
 		log.Fatal("Timeout reportado pelo servidor de cotações")
 	}
-
 	defer res.Body.Close()
 
 	var moeda Cotacao

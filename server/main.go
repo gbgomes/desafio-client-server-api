@@ -173,7 +173,7 @@ func gravaCotacoes(ctx context.Context, mds []Cotacao) error {
 	//		timestamp varchar(10),
 	//		createDate datetime)
 
-	db, err := sql.Open("mysql", "root:#Pk0cxh281513@tcp(localhost:3306)/goexpert?parseTime=true")
+	db, err := sql.Open("mysql", "root:#root@tcp(localhost:3306)/goexpert?parseTime=true")
 	if err != nil {
 		return err
 	}
