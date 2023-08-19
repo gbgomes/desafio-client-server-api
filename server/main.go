@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"time"
 
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 // https://mholt.github.io/json-to-go/ para converte json para stuc
@@ -36,6 +36,33 @@ type Cotacao struct {
 	CreateDate time.Time `json:"create_date,string"`
 }
 
+func init() {
+	//	db, err := sql.Open("mysql", "root:#root@tcp(localhost:3306)/goexpert?parseTime=true")
+	//	db, err := sql.Open("sqlite3", "/goexpert?parseTime=true")
+	db, err := sql.Open("sqlite3", "goexpert.db")
+	if err != nil {
+		panic(err)
+	}
+	defer db.Close()
+
+	_, err = db.Exec(
+		"DROP TABLE IF EXISTS cotacoes;" +
+			"CREATE TABLE cotacoes ( " +
+			"code char(3) NOT NULL PRIMARY KEY, codein char(3), " +
+			"name varchar(40), " +
+			"high double, " +
+			"low double, " +
+			"varBid double, " +
+			"pctChange double, " +
+			"bid double, " +
+			"ask double, " +
+			"timestamp varchar(10), " +
+			"createDate datetime)")
+	if err != nil {
+		panic(err)
+	}
+}
+
 func main() {
 	mux1 := http.NewServeMux()
 	mux1.HandleFunc("/cotacao", buscaCotacao)
@@ -53,6 +80,7 @@ func buscaCotacao(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err != nil {
+		log.Println(err)
 		http.Error(w, "Erro no processamanto da requisição", http.StatusInternalServerError)
 		return
 	}
@@ -173,7 +201,9 @@ func gravaCotacoes(ctx context.Context, mds []Cotacao) error {
 	//		timestamp varchar(10),
 	//		createDate datetime)
 
-	db, err := sql.Open("mysql", "root:#root@tcp(localhost:3306)/goexpert?parseTime=true")
+	//	db, err := sql.Open("mysql", "root:#root@tcp(localhost:3306)/goexpert?parseTime=true")
+	db, err := sql.Open("sqlite3", "goexpert.db")
+
 	if err != nil {
 		return err
 	}

@@ -30,7 +30,7 @@ func main() {
 
 	res, err := http.DefaultClient.Do(req)
 	if errors.Is(err, context.DeadlineExceeded) || os.IsTimeout(err) {
-		log.Fatal("Timeout no request ao servidor de cotações")
+		log.Fatal("Timeout no request ao server")
 	}
 	if err != nil {
 		log.Fatal(err)
